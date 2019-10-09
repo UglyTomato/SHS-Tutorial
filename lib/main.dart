@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
@@ -19,11 +19,22 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   String result = "Hey there !";
 
+  _launchURL( String result) async {
+//    const url = result;
+    if (await canLaunch(result)) {
+      await launch(result);
+    } else {
+      throw 'Could not launch $result';
+    }
+  }
+
   Future _scanQR() async {
     try {
       String qrResult = await BarcodeScanner.scan();
       setState(() {
-        result = qrResult;
+
+        result = "https://docs.google.com/forms/d/e/1FAIpQLSeX5jxY2oSHea8C2VCmEEj7ZFYG7F7KuPRrX9QHUbXwBIdt_A/viewform?usp=pp_url&entry.201368718=111111&entry.503158018=$qrResult";
+        _launchURL(result);
       });
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
