@@ -5,6 +5,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:intl/intl.dart';
 
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
@@ -37,12 +38,13 @@ class HomePageState extends State<HomePage> {
 
   void writeData(String s, String id, String firstName, String lastName, String qrResult){
     var now = new DateTime.now();
-    print(now.month.toString() + "/" + now.day.toString() + "/" + now.year.toString());
+    print(now.month.toString() + "/" + now.day.toString() + "/" + now.year.toString() + " " + DateFormat("H:m:s").format(now));
     database.child(s).set({
-      'id': id,
+      'Timestamp': (now.month.toString() + "/" + now.day.toString() + "/" + now.year.toString() + " " + DateFormat("H:m:s").format(now)),
+      'Student ID': id,
       'First Name': firstName,
       'Last Name': lastName,
-      'Teacher': qrResult,
+      'Room Number': qrResult,
     });
   }
   void readNumEntries(){
