@@ -85,11 +85,23 @@ class HomePageState extends State<HomePage> {
       readNumEntries();
     });
 
+    String id = "";
+    for(int x = 0; x < _googleSignIn.currentUser.email.length-1; x++){
+      String email = _googleSignIn.currentUser.email;
+      if(email.substring(x, x+1) == "1" || email.substring(x, x+1) == "2" || email.substring(x, x+1) == "3" || email.substring(x, x+1) == "4" || email.substring(x, x+1) == "5" || email.substring(x, x+1) == "6" || email.substring(x, x+1) == "7" || email.substring(x, x+1) == "8" || email.substring(x, x+1) == "9" || email.substring(x, x+1) == "0"){
+        id += email.substring(x, x+1);
+      }
+    }
+    id = "11" + id;
+    String firstName = _googleSignIn.currentUser.displayName.split(" ")[0];
+    String lastName = _googleSignIn.currentUser.displayName.split(" ")[1];
+    print(id);
+    print(firstName);
+    print(lastName);
+
     try {
       String qrResult = await BarcodeScanner.scan();
-      String id = studID.text;
-      String firstName = FirstName.text;
-      String lastName = LastName.text;
+
       setState(() {
 //        result = "https://docs.google.com/forms/d/e/1FAIpQLSeX5jxY2oSHea8C2VCmEEj7ZFYG7F7KuPRrX9QHUbXwBIdt_A/viewform?usp=pp_url&entry.693612192=$firstName&entry.1310158676=$lastName&entry.201368718=$id&entry.503158018=$qrResult";
 //        result = "https://docs.google.com/forms/d/e/1FAIpQLSeX5jxY2oSHea8C2VCmEEj7ZFYG7F7KuPRrX9QHUbXwBIdt_A/viewform?usp=pp_url&entry.201368718=$id&entry.503158018=$qrResult";
@@ -196,80 +208,83 @@ class HomePageState extends State<HomePage> {
 
             ],
           ),
-          Container(
-            padding: EdgeInsets.all(5),
-            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-//          width: MediaQuery.of(context).size.width-30,
-            decoration: new BoxDecoration(
-//            border: new Border.all(color: Colors.black, width: 0.5),
-              borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(5.0),
-                topRight: const Radius.circular(5.0),
-                bottomLeft: const Radius.circular(5.0),
-                bottomRight: const Radius.circular(5.0),
-              ),
-              color: Colors.grey[300],
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Center(
-              child: TextField(
-                controller: FirstName,
-                decoration: new InputDecoration(labelText: "First Name"),
-                keyboardType: TextInputType.text,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(5),
-            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-//          width: MediaQuery.of(context).size.width-30,
-            decoration: new BoxDecoration(
-//            border: new Border.all(color: Colors.black, width: 0.5),
-              borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(5.0),
-                topRight: const Radius.circular(5.0),
-                bottomLeft: const Radius.circular(5.0),
-                bottomRight: const Radius.circular(5.0),
-              ),
-              color: Colors.grey[300],
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Center(
-              child: TextField(
-                controller: LastName,
-                decoration: new InputDecoration(labelText: "Last Name"),
-                keyboardType: TextInputType.text,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(5),
-            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-//          width: MediaQuery.of(context).size.width-30,
-            decoration: new BoxDecoration(
-//            border: new Border.all(color: Colors.black, width: 0.5),
-              borderRadius: new BorderRadius.only(
-                topLeft: const Radius.circular(5.0),
-                topRight: const Radius.circular(5.0),
-                bottomLeft: const Radius.circular(5.0),
-                bottomRight: const Radius.circular(5.0),
-              ),
-              color: Colors.grey[300],
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Center(
-              child: TextField(
-                controller: studID,
-                decoration: new InputDecoration(labelText: "Enter your ID"),
-                keyboardType: TextInputType.number,
-              ),
-            ),
-          ),
+//          Container(
+//            padding: EdgeInsets.all(5),
+//            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+////          width: MediaQuery.of(context).size.width-30,
+//            decoration: new BoxDecoration(
+////            border: new Border.all(color: Colors.black, width: 0.5),
+//              borderRadius: new BorderRadius.only(
+//                topLeft: const Radius.circular(5.0),
+//                topRight: const Radius.circular(5.0),
+//                bottomLeft: const Radius.circular(5.0),
+//                bottomRight: const Radius.circular(5.0),
+//              ),
+//              color: Colors.grey[300],
+//            ),
+//            width: MediaQuery.of(context).size.width,
+//            child: Center(
+//              child: TextField(
+//                controller: FirstName,
+//                decoration: new InputDecoration(labelText: "First Name"),
+//                keyboardType: TextInputType.text,
+//              ),
+//            ),
+//          ),
+//          Container(
+//            padding: EdgeInsets.all(5),
+//            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+////          width: MediaQuery.of(context).size.width-30,
+//            decoration: new BoxDecoration(
+////            border: new Border.all(color: Colors.black, width: 0.5),
+//              borderRadius: new BorderRadius.only(
+//                topLeft: const Radius.circular(5.0),
+//                topRight: const Radius.circular(5.0),
+//                bottomLeft: const Radius.circular(5.0),
+//                bottomRight: const Radius.circular(5.0),
+//              ),
+//              color: Colors.grey[300],
+//            ),
+//            width: MediaQuery.of(context).size.width,
+//            child: Center(
+//              child: TextField(
+//                controller: LastName,
+//                decoration: new InputDecoration(labelText: "Last Name"),
+//                keyboardType: TextInputType.text,
+//              ),
+//            ),
+//          ),
+//          Container(
+//            padding: EdgeInsets.all(5),
+//            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+////          width: MediaQuery.of(context).size.width-30,
+//            decoration: new BoxDecoration(
+////            border: new Border.all(color: Colors.black, width: 0.5),
+//              borderRadius: new BorderRadius.only(
+//                topLeft: const Radius.circular(5.0),
+//                topRight: const Radius.circular(5.0),
+//                bottomLeft: const Radius.circular(5.0),
+//                bottomRight: const Radius.circular(5.0),
+//              ),
+//              color: Colors.grey[300],
+//            ),
+//            width: MediaQuery.of(context).size.width,
+//            child: Center(
+//              child: TextField(
+//                controller: studID,
+//                decoration: new InputDecoration(labelText: "Enter your ID"),
+//                keyboardType: TextInputType.number,
+//              ),
+//            ),
+//          ),
 
 
           InkWell(
             onTap: () {
-              _scanQR();
+              _isLoggedIn?
+              _scanQR():
+              print("Log in!!")
+              ;
             },
 //              _scanQR,
             child: Container(
