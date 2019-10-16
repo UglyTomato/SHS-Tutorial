@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() => runApp(MaterialApp(
   debugShowCheckedModeBanner: false,
@@ -26,6 +27,28 @@ class HomePageState extends State<HomePage> {
   TextEditingController LastName = new TextEditingController();
   final DatabaseReference database = FirebaseDatabase.instance.reference();
   String numEntries = "blah";
+  GoogleSignIn  _googleSignIn = GoogleSignIn(scopes: ['email']);
+  bool _isLoggedIn = false;
+
+  _login() async{
+    try{
+      await _googleSignIn.signIn();
+      setState(() {
+        _isLoggedIn = true;
+//        result = _googleSignIn.currentUser.displayName;
+      });
+    }
+    catch(err){
+      print(err);
+    }
+  }
+  _logout() {
+    _googleSignIn.signOut();
+    setState(() {
+      _isLoggedIn = false;
+//      result = "Log in!";
+    });
+  }
 
   _launchURL( String result) async {
 //    const url = result;
@@ -112,6 +135,67 @@ class HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: <Widget>[
+          _isLoggedIn?
+          Row(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                child: Image.network(
+                  _googleSignIn.currentUser.photoUrl,
+                  height: 80,
+                  width: 80,
+                )
+              ),
+              Container(
+                height: 100,
+                width: 150,
+                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.only(
+                    topLeft: const Radius.circular(20.0),
+                    topRight: const Radius.circular(20.0),
+                    bottomLeft: const Radius.circular(20.0),
+                    bottomRight: const Radius.circular(20.0),
+                  ),
+                  color: Colors.grey[300],
+                ),
+                child: InkWell(
+                  onTap: _logout,
+                  child: Center(
+                    child: Text("Log Out?", style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                  )
+                ),
+              )
+            ],
+          ) : Row(
+            children: <Widget>[
+              Container(
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                  child: Icon(Icons.account_circle, size: 80,)
+              ),
+              Container(
+                height: 100,
+                width: 150,
+                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.only(
+                    topLeft: const Radius.circular(20.0),
+                    topRight: const Radius.circular(20.0),
+                    bottomLeft: const Radius.circular(20.0),
+                    bottomRight: const Radius.circular(20.0),
+                  ),
+                  color: Colors.grey[300],
+                ),
+                child: InkWell(
+                  onTap: _login,
+                  child: Center(
+                    child: Text("Log In?", style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                  )
+                ),
+              )
+
+            ],
+          ),
           Container(
             padding: EdgeInsets.all(5),
             margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -184,12 +268,10 @@ class HomePageState extends State<HomePage> {
 
 
           InkWell(
-            onTap:
-//            (studID.text != "" && FirstName.text != "" && LastName.text != "")?
-            _scanQR
-
-//                : _DoNothing()
-              ,
+            onTap: () {
+              _scanQR();
+            },
+//              _scanQR,
             child: Container(
               padding: EdgeInsets.all(5),
               margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
