@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:qr_scanner/info.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
@@ -59,7 +60,7 @@ class HomePageState extends State<HomePage> {
     }
   }
 
-  void writeData(String s, String id, String firstName, String lastName, String qrResult){
+  void writeData(String s, String id, String firstName, String lastName, String qrResult, String condition){
     var now = new DateTime.now();
     print(now.month.toString() + "/" + now.day.toString() + "/" + now.year.toString() + " " + DateFormat("H:m:s").format(now));
     database.child(s).set({
@@ -68,6 +69,7 @@ class HomePageState extends State<HomePage> {
       'First Name': firstName,
       'Last Name': lastName,
       'Room Number': qrResult,
+      'Contition': condition,
     });
   }
   void readNumEntries(){
@@ -101,6 +103,17 @@ class HomePageState extends State<HomePage> {
 
     try {
       String qrResult = await BarcodeScanner.scan();
+      String condition = "";
+      LastRoom room = new LastRoom();
+      room.readContent().then((onValue){
+        if(onValue == qrResult){
+          condition = "Check Out";
+        } else {
+          condition = "Check in";
+        }
+        writeData((int.parse(numEntries) + 1).toString(), id, firstName, lastName, qrResult, condition);
+      });
+      room.writeContent(qrResult);
 
       setState(() {
 //        result = "https://docs.google.com/forms/d/e/1FAIpQLSeX5jxY2oSHea8C2VCmEEj7ZFYG7F7KuPRrX9QHUbXwBIdt_A/viewform?usp=pp_url&entry.693612192=$firstName&entry.1310158676=$lastName&entry.201368718=$id&entry.503158018=$qrResult";
@@ -108,7 +121,7 @@ class HomePageState extends State<HomePage> {
 //        _launchURL(result);
         result = "All checked in!\nTap again to check in!";
 
-        writeData((int.parse(numEntries) + 1).toString(), id, firstName, lastName, qrResult);
+
         database.update({
           'numEntries': (int.parse(numEntries) + 1).toString()
         });
