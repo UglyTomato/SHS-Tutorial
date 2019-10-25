@@ -19,6 +19,7 @@ class LastRoom {
     try{
       final file = await localFile;
       String contents = await file.readAsString();
+      print("this is the content:" + contents);
       return contents;
     }catch(e)
     {
@@ -28,6 +29,7 @@ class LastRoom {
 
   Future<File> writeContent(String content) async {
     final file = await localFile;
+    print(file.path);
     return file.writeAsString('$content');
   }
 }

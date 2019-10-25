@@ -102,30 +102,37 @@ class HomePageState extends State<HomePage> {
     print(lastName);
 
     try {
+      LastRoom room = new LastRoom();
+//      room.writeContent("hi1!!!!");
       String qrResult = await BarcodeScanner.scan();
       String condition = "";
-      LastRoom room = new LastRoom();
       room.readContent().then((onValue){
-        if(onValue == qrResult){
+        if(onValue == "Check in"){
           condition = "Check Out";
         } else {
           condition = "Check in";
         }
         writeData((int.parse(numEntries) + 1).toString(), id, firstName, lastName, qrResult, condition);
-      });
-      room.writeContent(qrResult);
+        room.writeContent(condition);
 
-      setState(() {
+        setState(() {
 //        result = "https://docs.google.com/forms/d/e/1FAIpQLSeX5jxY2oSHea8C2VCmEEj7ZFYG7F7KuPRrX9QHUbXwBIdt_A/viewform?usp=pp_url&entry.693612192=$firstName&entry.1310158676=$lastName&entry.201368718=$id&entry.503158018=$qrResult";
 //        result = "https://docs.google.com/forms/d/e/1FAIpQLSeX5jxY2oSHea8C2VCmEEj7ZFYG7F7KuPRrX9QHUbXwBIdt_A/viewform?usp=pp_url&entry.201368718=$id&entry.503158018=$qrResult";
 //        _launchURL(result);
-        result = "All checked in!\nTap again to check in!";
+          result = "All checked in!\nTap again to check in!";
 
 
-        database.update({
-          'numEntries': (int.parse(numEntries) + 1).toString()
+          database.update({
+            'numEntries': (int.parse(numEntries) + 1).toString()
+          });
         });
+
+
+
       });
+
+
+
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
