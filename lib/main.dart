@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:qr_scanner/info.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
@@ -31,13 +31,27 @@ class HomePageState extends State<HomePage> {
   GoogleSignIn  _googleSignIn = GoogleSignIn(scopes: ['email']);
   bool _isLoggedIn = false;
 
+  void initState(){
+    super.initState();
+    if(_isLoggedIn){
+      result = "Tap me to sign in!";
+    } else {
+      result = "Log in with your School Google account to continue.";
+    }
+  }
+
   _login() async{
     try{
       await _googleSignIn.signIn();
-      setState(() {
-        _isLoggedIn = true;
-//        result = _googleSignIn.currentUser.displayName;
-      });
+      if(_googleSignIn.currentUser.email.split('@')[1] == "lgsstudent.org"){
+        setState(() {
+          _isLoggedIn = true;
+          result = "Tap me to sign in!";
+  //        result = _googleSignIn.currentUser.displayName;
+        });
+      } else {
+        _logout();
+      }
     }
     catch(err){
       print(err);
@@ -47,18 +61,19 @@ class HomePageState extends State<HomePage> {
     _googleSignIn.signOut();
     setState(() {
       _isLoggedIn = false;
+      result = "Log in with your School Google account to continue.";
 //      result = "Log in!";
     });
   }
 
-  _launchURL( String result) async {
-//    const url = result;
-    if (await canLaunch(result)) {
-      await launch(result);
-    } else {
-      throw 'Could not launch $result';
-    }
-  }
+//  _launchURL( String result) async {
+////    const url = result;
+//    if (await canLaunch(result)) {
+//      await launch(result);
+//    } else {
+//      throw 'Could not launch $result';
+//    }
+//  }
 
   void writeData(String s, String id, String firstName, String lastName, String qrResult, String condition){
     var now = new DateTime.now();
@@ -133,6 +148,7 @@ class HomePageState extends State<HomePage> {
 
 
 
+
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
@@ -167,6 +183,7 @@ class HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: <Widget>[
+
           _isLoggedIn?
           Row(
             children: <Widget>[
@@ -178,26 +195,35 @@ class HomePageState extends State<HomePage> {
                   width: 80,
                 )
               ),
-              Container(
-                height: 100,
-                width: 150,
-                margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                decoration: new BoxDecoration(
-                  borderRadius: new BorderRadius.only(
-                    topLeft: const Radius.circular(20.0),
-                    topRight: const Radius.circular(20.0),
-                    bottomLeft: const Radius.circular(20.0),
-                    bottomRight: const Radius.circular(20.0),
-                  ),
-                  color: Colors.grey[300],
-                ),
-                child: InkWell(
-                  onTap: _logout,
-                  child: Center(
-                    child: Text("Log Out?", style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-                  )
-                ),
+              Center(
+                child: Column(
+                  children: <Widget>[
+                    Text(_googleSignIn.currentUser.displayName, style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                    Container(
+                      height: 50,
+                      width: 150,
+                      margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.only(
+                          topLeft: const Radius.circular(20.0),
+                          topRight: const Radius.circular(20.0),
+                          bottomLeft: const Radius.circular(20.0),
+                          bottomRight: const Radius.circular(20.0),
+                        ),
+                        color: Colors.grey[300],
+                      ),
+                      child: InkWell(
+                          onTap: _logout,
+                          child: Center(
+                            child: Text("Log Out?", style: new TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                          )
+                      ),
+                    )
+                  ],
+                )
               )
+
+
             ],
           ) : Row(
             children: <Widget>[
