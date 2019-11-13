@@ -1,6 +1,6 @@
 # qr_scanner
 
-for school
+Created for the LGSUHSD School District to streamline tutorial sign in.
 
 ## Getting Started
 
